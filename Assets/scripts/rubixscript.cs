@@ -13,34 +13,72 @@ public class rubixscript : MonoBehaviour
     Vector gw = new Vector(0, -1, -1), gy = new Vector(0, 1, -1), gr = new Vector(-1, 0, -1), go = new Vector(1, 0, -1), bw = new Vector(0, -1, 1), by = new Vector(0, 1, 1);
     Vector br = new Vector(-1, 0, 1), bo = new Vector(1, 0, 1), wr = new Vector(-1, -1, 0), wo = new Vector(1, -1, 0), yr = new Vector(-1, 1, 0), yo = new Vector(1, 1, 0);
     void Start()
-    {
-
-        
+    {     
         Vector[] vectors = { g, b, w, y, r, o, gow, goy, bow, boy, gwr, gyr, bwr, byr, gw, gy, gr, go, bw, by, br, bo, wr, wo, yr, yo };
-
-       // gc.transform.position = new Vector3(1,1,1);
-        bc.transform.position = new Vector3(1, 1, 1);
-        wc.transform.position = new Vector3(1, 1, 1);
-        yc.transform.position = new Vector3(1, 1, 1);
-        rc.transform.position = new Vector3(1, 1, 1);
-        oc.transform.position = new Vector3(1, 1, 1);
-        // gowc.transform.position = new Vector3(gow.X, gow.Y, gow.Z);
-
-
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
         gc.transform.position = new Vector3(g.X, g.Y, g.Z);
         bc.transform.position = new Vector3(b.X, b.Y, b.Z);
         wc.transform.position = new Vector3(w.X, w.Y, w.Z);
         yc.transform.position = new Vector3(y.X, y.Y, y.Z);
         rc.transform.position = new Vector3(r.X, r.Y, r.Z);
         oc.transform.position = new Vector3(o.X, o.Y, o.Z);
-    
+        gowc.transform.position = new Vector3(gow.X, gow.Y, gow.Z);
+        goyc.transform.position = new Vector3(goy.X, goy.Y, goy.Z);
+        bowc.transform.position = new Vector3(bow.X, bow.Y, bow.Z);
+        boyc.transform.position = new Vector3(boy.X, boy.Y, boy.Z);
+        gwrc.transform.position = new Vector3(gwr.X, gwr.Y, gwr.Z);
+        gyrc.transform.position = new Vector3(gyr.X, gyr.Y, gyr.Z);
+        bwrc.transform.position = new Vector3(bwr.X, bwr.Y, bwr.Z);
+        byrc.transform.position = new Vector3(byr.X, byr.Y, byr.Z);
+        gwc.transform.position = new Vector3(gw.X, gw.Y, gw.Z);
+        gyc.transform.position = new Vector3(gy.X, gy.Y, gy.Z);
+        grc.transform.position = new Vector3(gr.X, gr.Y, gr.Z);
+        goc.transform.position = new Vector3(go.X, go.Y, go.Z);
+        bwc.transform.position = new Vector3(bw.X, bw.Y, bw.Z);
+        byc.transform.position = new Vector3(by.X, by.Y, by.Z);
+        brc.transform.position = new Vector3(br.X, br.Y, br.Z);
+        boc.transform.position = new Vector3(bo.X, bo.Y, bo.Z);
+        wrc.transform.position = new Vector3(wr.X, wr.Y, wr.Z);
+        woc.transform.position = new Vector3(wo.X, wo.Y, wo.Z);
+        yrc.transform.position = new Vector3(yr.X, yr.Y, yr.Z);
+        yoc.transform.position = new Vector3(yo.X, yo.Y, yo.Z);
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (false)
+        {
+
+
+            gc.transform.position = new Vector3(g.X, g.Y, g.Z);
+            bc.transform.position = new Vector3(b.X, b.Y, b.Z);
+            wc.transform.position = new Vector3(w.X, w.Y, w.Z);
+            yc.transform.position = new Vector3(y.X, y.Y, y.Z);
+            rc.transform.position = new Vector3(r.X, r.Y, r.Z);
+            oc.transform.position = new Vector3(o.X, o.Y, o.Z);
+            gowc.transform.position = new Vector3(gow.X, gow.Y, gow.Z);
+            goyc.transform.position = new Vector3(goy.X, goy.Y, goy.Z);
+            bowc.transform.position = new Vector3(bow.X, bow.Y, bow.Z);
+            boyc.transform.position = new Vector3(boy.X, boy.Y, boy.Z);
+            gwrc.transform.position = new Vector3(gwr.X, gwr.Y, gwr.Z);
+            gyrc.transform.position = new Vector3(gyr.X, gyr.Y, gyr.Z);
+            bwrc.transform.position = new Vector3(bwr.X, bwr.Y, bwr.Z);
+            byrc.transform.position = new Vector3(byr.X, byr.Y, byr.Z);
+            gwc.transform.position = new Vector3(gw.X, gw.Y, gw.Z);
+            gyc.transform.position = new Vector3(gy.X, gy.Y, gy.Z);
+            grc.transform.position = new Vector3(gr.X, gr.Y, gr.Z);
+            goc.transform.position = new Vector3(go.X, go.Y, go.Z);
+            bwc.transform.position = new Vector3(bw.X, bw.Y, bw.Z);
+            byc.transform.position = new Vector3(by.X, by.Y, by.Z);
+            brc.transform.position = new Vector3(br.X, br.Y, br.Z);
+            boc.transform.position = new Vector3(bo.X, bo.Y, bo.Z);
+            wrc.transform.position = new Vector3(wr.X, wr.Y, wr.Z);
+            woc.transform.position = new Vector3(wo.X, wo.Y, wo.Z);
+            yrc.transform.position = new Vector3(yr.X, yr.Y, yr.Z);
+            yoc.transform.position = new Vector3(yo.X, yo.Y, yo.Z);
         }
+    }
     class Vector
     {
         public float X { get; set; }
