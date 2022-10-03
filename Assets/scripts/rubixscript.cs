@@ -8,6 +8,9 @@ public class rubixscript : MonoBehaviour
     // Start is called before the first frame update
     public GameObject gc, bc, wc, yc, rc, oc, gowc, goyc, bowc, boyc, gwrc, gyrc, bwrc, byrc, gwc, gyc, grc, goc, bwc, byc, brc, boc, wrc, woc, yrc, yoc;
     
+    private bool rm, lm, bm, um, dm, fm, vm, hm, mm, shiftm;
+    private string mv;
+
     Vector g = new Vector(0, 0, -1), b = new Vector(0, 0, 1), w = new Vector(0, -1, 0), y = new Vector(0, 1, 0), r = new Vector(-1, 0, 0), o = new Vector(1, 0, 0);
     Vector gow = new Vector(1, -1, -1), goy = new Vector(1, 1, -1), bow = new Vector(1, -1, 1), boy = new Vector(1, 1, 1), gwr = new Vector(-1, -1, -1);
     Vector gyr = new Vector(-1, 1, -1), bwr = new Vector(-1, -1, 1), byr = new Vector(-1, 1, 1);
@@ -221,24 +224,67 @@ public class rubixscript : MonoBehaviour
         yrc.transform.position = new Vector3(yr.X, yr.Y, yr.Z);
         yoc.transform.position = new Vector3(yo.X, yo.Y, yo.Z);
     }
+
     void Start()
     {     
         Vector[] vectors = { g, b, w, y, r, o, gow, goy, bow, boy, gwr, gyr, bwr, byr, gw, gy, gr, go, bw, by, br, bo, wr, wo, yr, yo };
         fixPosition();
 
     }
+
     void Update()
     {
-
-
-        if (Input.GetKeyDown(KeyCode.R))
+        rm = Input.GetKeyDown(KeyCode.R); lm = Input.GetKeyDown(KeyCode.L); bm = Input.GetKeyDown(KeyCode.B);
+        fm = Input.GetKeyDown(KeyCode.F); um = Input.GetKeyDown(KeyCode.U); dm = Input.GetKeyDown(KeyCode.D);
+        vm = Input.GetKeyDown(KeyCode.V); hm = Input.GetKeyDown(KeyCode.H); mm = Input.GetKeyDown(KeyCode.M);
+        shiftm = Input.GetKeyDown(KeyCode.LeftShift);
+        // { 'r', 'l', 'b', 'u', 'd', 'f', 'v', 'h', 'm' }
+        if (rm || lm || bm || fm || um || dm || vm || hm || mm)
         {
-
+            if (rm)
+            {
+                mv = "r";
+            }
+            else if (lm)
+            {
+                mv = "l";
+            }
+            else if (bm)
+            {
+                mv = "b";
+            }
+            else if (fm)
+            {
+                mv = "f";
+            }
+            else if (um)
+            {
+                mv = "u";
+            }
+            else if (dm)
+            {
+                mv = "d";
+            }
+            else if (vm)
+            {
+                mv = "v";
+            }
+            else if (hm)
+            {
+                mv = "h";
+            }
+            else if (mm)
+            {
+                mv = "m";
+            }
+            if (shiftm)
+            {
+                mv = mv.ToUpper();
+            }
+            
+            Move move = new Move(vectors, mv);
+            fixPosition();
         }
-            //, l = Input.GetKeyDown(KeyCode.L), b = Input.GetKeyDown(KeyCode.B);
-        bool f = Input.GetKeyDown(KeyCode.F), u = Input.GetKeyDown(KeyCode.U), d = Input.GetKeyDown(KeyCode.D);
-        bool v = Input.GetKeyDown(KeyCode.V), h = Input.GetKeyDown(KeyCode.H), m = Input.GetKeyDown(KeyCode.M);
-        bool shift = Input.GetKeyDown(KeyCode.LeftShift);
 
     }
 
