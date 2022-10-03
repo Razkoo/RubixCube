@@ -48,9 +48,7 @@ public class rubixscript : MonoBehaviour
     void Update()
     {
         if (false)
-        {
-
-
+        { 
             gc.transform.position = new Vector3(g.X, g.Y, g.Z);
             bc.transform.position = new Vector3(b.X, b.Y, b.Z);
             wc.transform.position = new Vector3(w.X, w.Y, w.Z);
