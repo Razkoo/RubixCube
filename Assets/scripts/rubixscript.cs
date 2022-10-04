@@ -7,7 +7,7 @@ using System.Threading;
 public class rubixscript : MonoBehaviour
 {
     // Start is called before the first frame update
-
+    bool flag = false;
     public GameObject gc, bc, wc, yc, rc, oc, gowc, goyc, bowc, boyc, gwrc, gyrc, bwrc, byrc, gwc, gyc, grc, goc, bwc, byc, brc, boc, wrc, woc, yrc, yoc;
     private bool rm, lm, bm, um, dm, fm, vm, hm, mm, shiftm;
     private string mv, rotation;
@@ -254,6 +254,8 @@ public class rubixscript : MonoBehaviour
         fm = Input.GetKeyDown(KeyCode.F); um = Input.GetKeyDown(KeyCode.U); dm = Input.GetKeyDown(KeyCode.D);
         vm = Input.GetKeyDown(KeyCode.V); hm = Input.GetKeyDown(KeyCode.H); mm = Input.GetKeyDown(KeyCode.M);
         shiftm = Input.GetKeyDown(KeyCode.LeftShift);
+        if (shiftm)
+            flag = true;
 
         if (rm || lm || bm || fm || um || dm || vm || hm || mm)
         {
@@ -266,8 +268,11 @@ public class rubixscript : MonoBehaviour
             else if (vm) mv = "v";
             else if (hm) mv = "h";
             else if (mm) mv = "m";
-            if (shiftm) mv = mv.ToUpper();
-
+            if (flag)
+            {
+                mv = mv.ToUpper();
+                flag = false;
+            }
             return mv;
         }
 
