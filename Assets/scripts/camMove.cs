@@ -5,7 +5,6 @@ using UnityEngine;
 public class camMove : MonoBehaviour
 {
     private Vector2 turn;
-    private int MIN_RANGE = -2, MAX_RANGE = 2;
     private float xm = 0, ym = 0, zm = 0;
     bool a, d, w, s, space;
 

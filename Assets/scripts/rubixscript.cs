@@ -7,6 +7,7 @@ using System.Threading;
 public class rubixscript : MonoBehaviour
 {
     // Start is called before the first frame update
+
     public GameObject gc, bc, wc, yc, rc, oc, gowc, goyc, bowc, boyc, gwrc, gyrc, bwrc, byrc, gwc, gyc, grc, goc, bwc, byc, brc, boc, wrc, woc, yrc, yoc;
     private bool rm, lm, bm, um, dm, fm, vm, hm, mm, shiftm;
     private string mv, rotation;
@@ -18,6 +19,7 @@ public class rubixscript : MonoBehaviour
     Vector br = new Vector(-1, 0, 1), bo = new Vector(1, 0, 1), wr = new Vector(-1, -1, 0), wo = new Vector(1, -1, 0), yr = new Vector(-1, 1, 0), yo = new Vector(1, 1, 0);
     class Vector
     {
+        
         public float X { get; set; }
         public float Y { get; set; }
         public float Z { get; set; }
@@ -34,6 +36,7 @@ public class rubixscript : MonoBehaviour
             /* Return if a point is on certain axis
              * Vector, axis value, x y or z
              */
+           
             if ((plane == 'x' && v.X == axis) || (plane == 'y' && v.Y == axis) || (plane == 'z' && v.Z == axis))
                 return true;
             else
@@ -52,6 +55,7 @@ public class rubixscript : MonoBehaviour
                 vectors[i].X = x * matrix[0, 0] + y * matrix[0, 1] + z * matrix[0, 2];
                 vectors[i].Y = x * matrix[1, 0] + y * matrix[1, 1] + z * matrix[1, 2];
                 vectors[i].Z = x * matrix[2, 0] + y * matrix[2, 1] + z * matrix[2, 2];
+
             }
 
             return vectors;
@@ -87,16 +91,34 @@ public class rubixscript : MonoBehaviour
     class Move
     {
         private Vector[] Vectors { get; set; }
+        private GameObject[] Objects { get; set; }
         private string Rotation { get; set; }
         private int NUM_OF_VECTORS { get; set; }
 
-        public Move(Vector[] vectors, string move)
+        public Move(Vector[] vectors, GameObject[] objs, string move)
         {
             this.NUM_OF_VECTORS = 26;
 
             this.Vectors = vectors;
+            this.Objects = objs;
             this.Rotation = move;
         }
+        private static void rotate90(Move newMove, string mv, int[] indexes)
+        {
+            int xd= 0, yd = 0, zd = 0;
+            int neg = 1;
+            foreach (int i in indexes)
+            {
+                if (mv == mv.ToUpper()) neg = -1;
+                if (mv == "r" || mv == "v" || mv == "l") zd = 90 * neg;
+                else if (mv == "b" || mv == "m" || mv == "f") xd = 90 * neg;
+                else yd = 90 * neg;
+
+                newMove.Objects[i].transform.Rotate(xd, yd, zd);
+                neg = 1; xd = 0; yd = 0; zd = 0;
+            }
+        }
+
         private static int[] Org(Move newMove)
         {
             // Return the indexes of vectors in the wanted rotation
@@ -192,6 +214,7 @@ public class rubixscript : MonoBehaviour
                 pMatrix[0, 2] = -1;
             }
 
+            rotate90(newMove, rot, indexes);
             return Vector.MatrixVectorMul(vectors, indexes, pMatrix);
         }
     }
@@ -251,20 +274,21 @@ public class rubixscript : MonoBehaviour
         return null;    
     }
     void Start()
-    {     
-        Vector[] vectors = { g, b, w, y, r, o, gow, goy, bow, boy, gwr, gyr, bwr, byr, gw, gy, gr, go, bw, by, br, bo, wr, wo, yr, yo };
+    {
         fixPosition();
+        
 
     }
 
     void Update()
     {
+        GameObject[] vectorsO = { gc, bc, wc, yc, rc, oc, gowc, goyc, bowc, boyc, gwrc, gyrc, bwrc, byrc, gwc, gyc, grc, goc, bwc, byc, brc, boc, wrc, woc, yrc, yoc };
         Vector[] vectors = { g, b, w, y, r, o, gow, goy, bow, boy, gwr, gyr, bwr, byr, gw, gy, gr, go, bw, by, br, bo, wr, wo, yr, yo };
+       
         rotation = checkRotation();
-
         if (rotation != null)
         {
-            Move move = new Move(vectors, rotation);
+            Move move = new Move(vectors, vectorsO, rotation);
             vectors = Move.Spin(move);
             fixPosition();
         }
