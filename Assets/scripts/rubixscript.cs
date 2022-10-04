@@ -2,13 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading;
 
 public class rubixscript : MonoBehaviour
 {
     // Start is called before the first frame update
     public GameObject gc, bc, wc, yc, rc, oc, gowc, goyc, bowc, boyc, gwrc, gyrc, bwrc, byrc, gwc, gyc, grc, goc, bwc, byc, brc, boc, wrc, woc, yrc, yoc;
-    
-    private bool rm, lm, bm, um, dm, fm, vm, hm, mm, shiftm;
+    private bool rm , lm, bm, um, dm, fm, vm, hm, mm, shiftm, flag = false;
     private string mv;
 
     Vector g = new Vector(0, 0, -1), b = new Vector(0, 0, 1), w = new Vector(0, -1, 0), y = new Vector(0, 1, 0), r = new Vector(-1, 0, 0), o = new Vector(1, 0, 0);
@@ -234,58 +234,75 @@ public class rubixscript : MonoBehaviour
 
     void Update()
     {
+        Vector[] vectors = { g, b, w, y, r, o, gow, goy, bow, boy, gwr, gyr, bwr, byr, gw, gy, gr, go, bw, by, br, bo, wr, wo, yr, yo };
+
         rm = Input.GetKeyDown(KeyCode.R); lm = Input.GetKeyDown(KeyCode.L); bm = Input.GetKeyDown(KeyCode.B);
         fm = Input.GetKeyDown(KeyCode.F); um = Input.GetKeyDown(KeyCode.U); dm = Input.GetKeyDown(KeyCode.D);
         vm = Input.GetKeyDown(KeyCode.V); hm = Input.GetKeyDown(KeyCode.H); mm = Input.GetKeyDown(KeyCode.M);
         shiftm = Input.GetKeyDown(KeyCode.LeftShift);
         // { 'r', 'l', 'b', 'u', 'd', 'f', 'v', 'h', 'm' }
+        if (shiftm)
+            flag = true;
         if (rm || lm || bm || fm || um || dm || vm || hm || mm)
         {
             if (rm)
             {
                 mv = "r";
+                rm = false;
             }
             else if (lm)
             {
                 mv = "l";
+                lm = false;
             }
             else if (bm)
             {
                 mv = "b";
+                bm = false;
             }
             else if (fm)
             {
                 mv = "f";
+                fm = false;
             }
             else if (um)
             {
                 mv = "u";
+                um = false;
             }
             else if (dm)
             {
                 mv = "d";
+                dm = false;
             }
             else if (vm)
             {
                 mv = "v";
+                vm = false;
             }
             else if (hm)
             {
                 mv = "h";
+                hm = false;
             }
             else if (mm)
             {
                 mv = "m";
+                mm = false;
             }
-            if (shiftm)
+         
+            if (flag) 
             {
                 mv = mv.ToUpper();
+                shiftm = false;
+                flag = false;
             }
-            
+
             Move move = new Move(vectors, mv);
+        vectors = Move.Spin(move);
             fixPosition();
         }
-
+        
     }
 
     
