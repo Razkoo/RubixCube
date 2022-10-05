@@ -103,21 +103,25 @@ public class rubixscript : MonoBehaviour
             this.Objects = objs;
             this.Rotation = move;
         }
-        private static void rotate90(Move newMove, string mv, int[] indexes)
+     /*   private static void rotate90(Move newMove, string mv, int[] indexes)
         {
-            int xd= 0, yd = 0, zd = 0;
+            int xd = 0, yd = 0, zd = 0;
             int neg = 1;
+            if (mv == mv.ToUpper())
+                neg = -1;
+            if (mv == "r" || mv == "v" || mv == "l")
+                xd = 90 * neg;
+            else if (mv == "b" || mv == "m" || mv == "f")
+                xd = 90 * neg;
+            else
+                yd = 90 * neg;
+            Debug.Log(xd + " " + yd + " " + zd);
             foreach (int i in indexes)
-            {
-                if (mv == mv.ToUpper()) neg = -1;
-                if (mv == "r" || mv == "v" || mv == "l") zd = 90 * neg;
-                else if (mv == "b" || mv == "m" || mv == "f") xd = 90 * neg;
-                else yd = 90 * neg;
+                newMove.Objects[i].transform.Rotate(0, 0, 90);
+            // bugreport        newMove.Objects[i].transform.Rotate(-y, x, z);
 
-                newMove.Objects[i].transform.Rotate(xd, yd, zd);
-                neg = 1; xd = 0; yd = 0; zd = 0;
-            }
-        }
+        }*/
+
 
         private static int[] Org(Move newMove)
         {
@@ -214,7 +218,7 @@ public class rubixscript : MonoBehaviour
                 pMatrix[0, 2] = -1;
             }
 
-            rotate90(newMove, rot, indexes);
+          //  rotate90(newMove, rot, indexes);
             return Vector.MatrixVectorMul(vectors, indexes, pMatrix);
         }
     }
