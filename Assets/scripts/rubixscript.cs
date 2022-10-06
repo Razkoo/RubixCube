@@ -103,24 +103,25 @@ public class rubixscript : MonoBehaviour
             this.Objects = objs;
             this.Rotation = move;
         }
-     /*   private static void rotate90(Move newMove, string mv, int[] indexes)
+        private static void rotate90(Move newMove, string mv, int[] indexes)
         {
             int xd = 0, yd = 0, zd = 0;
             int neg = 1;
             if (mv == mv.ToUpper())
                 neg = -1;
+            mv = mv.ToLower();
             if (mv == "r" || mv == "v" || mv == "l")
-                xd = 90 * neg;
+                zd = 45 * neg;
             else if (mv == "b" || mv == "m" || mv == "f")
                 xd = 90 * neg;
             else
                 yd = 90 * neg;
             Debug.Log(xd + " " + yd + " " + zd);
             foreach (int i in indexes)
-                newMove.Objects[i].transform.Rotate(0, 0, 90);
+                newMove.Objects[i].transform.Rotate(-yd, xd, zd,Space.Self);
             // bugreport        newMove.Objects[i].transform.Rotate(-y, x, z);
 
-        }*/
+        }
 
 
         private static int[] Org(Move newMove)
@@ -218,7 +219,7 @@ public class rubixscript : MonoBehaviour
                 pMatrix[0, 2] = -1;
             }
 
-          //  rotate90(newMove, rot, indexes);
+            rotate90(newMove, rot, indexes);
             return Vector.MatrixVectorMul(vectors, indexes, pMatrix);
         }
     }
@@ -285,10 +286,7 @@ public class rubixscript : MonoBehaviour
     void Start()
     {
         fixPosition();
-        
-
     }
-
     void Update()
     {
         GameObject[] vectorsO = { gc, bc, wc, yc, rc, oc, gowc, goyc, bowc, boyc, gwrc, gyrc, bwrc, byrc, gwc, gyc, grc, goc, bwc, byc, brc, boc, wrc, woc, yrc, yoc };
