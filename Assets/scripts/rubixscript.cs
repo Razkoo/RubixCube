@@ -111,7 +111,7 @@ public class rubixscript : MonoBehaviour
                 neg = -1;
             mv = mv.ToLower();
             if (mv == "r" || mv == "v" || mv == "l")
-                zd = 45 * neg;
+                zd = 90 * neg;
             else if (mv == "b" || mv == "m" || mv == "f")
                 xd = 90 * neg;
             else
