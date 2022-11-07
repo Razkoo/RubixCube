@@ -115,10 +115,10 @@ public class rubixscript : MonoBehaviour
             else if (mv == "b" || mv == "m" || mv == "f")
                 xd = 90 * neg;
             else
-                yd = 90 * neg;
+                xd = 90 * neg;
             Debug.Log(xd + " " + yd + " " + zd);
             foreach (int i in indexes)
-                newMove.Objects[i].transform.Rotate(-yd, xd, zd,Space.Self);
+                newMove.Objects[i].transform.Rotate(-yd, xd, zd,Space.World);
             // bugreport        newMove.Objects[i].transform.Rotate(-y, x, z);
 
         }
