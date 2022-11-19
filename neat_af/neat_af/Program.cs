@@ -8,17 +8,17 @@ namespace neat_af
 {
     class Cube
     {
-        public char[][] cubeS { get; set; }
-        public char[][] Scube { get; set; }
+        public char [][] cubeS { get; set; }
+        public char [][] Scube { get; set; }
 
-        public Cube(char[][] solved)
+        public Cube(char [][] solved)
         {
             this.Scube = solved;
             setstart();
         }
         private void setstart()
         {
-            this.cubeS = this.Scube;
+            this.cubeS = this.Scube;   
         }
         private char[][] SideRot(char[][] set, int whatside, bool shift)
         {
@@ -52,14 +52,14 @@ namespace neat_af
 
             return set;
         }
-        private char[][] Switch(char[][] set, int[] arr, bool shift, bool side, int whatside)
+        private char[][] Switch(char[][] set, int[] arr,bool shift, bool side, int whatside)
         {
             if (shift)
             {
                 for (int i = 1; i < 4; i++)
                 {
                     char saveval = set[arr[12]][i + 12];
-                    set[arr[11]][arr[i + 11]] = set[arr[8]][arr[i + 8]];
+                    set[arr[12]][arr[i + 12]] = set[arr[8]][arr[i + 8]];
                     set[arr[8]][arr[i + 8]] = set[arr[4]][arr[i + 4]];
                     set[arr[4]][arr[i + 4]] = set[arr[0]][arr[i + 0]];
                     set[arr[0]][arr[i + 0]] = saveval;
@@ -70,8 +70,8 @@ namespace neat_af
             {
                 for (int i = 1; i < 4; i++)
                 {
-                    char saveval = set[arr[0]][i + 0];
-                    set[arr[0]][arr[arr[i + 0]]] = set[arr[4]][arr[i + 4]];
+                    char saveval = set[arr[0]][arr[i + 0]];
+                    set[arr[0]][arr[i + 0]] = set[arr[4]][arr[i + 4]];
                     set[arr[4]][arr[i + 4]] = set[arr[8]][arr[i + 8]];
                     set[arr[8]][arr[i + 8]] = set[arr[12]][arr[i + 12]];
                     set[arr[12]][arr[i + 12]] = saveval;
@@ -79,8 +79,10 @@ namespace neat_af
                 }
             }
 
-
-            set = SideRot(set, whatside, shift);
+            if (side)
+            {
+                set = SideRot(set, whatside, shift);
+            }
             return set;
         }
         public override string ToString()
@@ -94,23 +96,23 @@ namespace neat_af
                 almostoutput[2 * i + 1] = ',';
             }
             string output;
-            output = string.Join("", almostoutput);
+            output = string.Join("" , almostoutput);
             return output;
         }
+    
 
-
-        public Cube Rotation(char c, bool shift, Cube cube)
+        public Cube Rotation(char c,bool shift, Cube cube)
         {
             int[] arr = new int[16];
             //turn x ={ side x (0) ,square1 , squar2 ,square3 ,side y (4) ,square1 , squar2 ,square3 ,side z (8) ,square1 , squar2 ,square3 ,side q(12) ,square1  , squar2 ,square3 }
             //r = {0,2,3,4,1,2,3,4,2,2,3,4,3,2,3,4}
             //l = {0,0,7,6,1,0,7,6,2,0,7,6,3,0,7,6}
-            //v = {0,5,8,2,1,5,8,2,2,5,8,2,3,5,8,2}
+            //v = {0,5,8,1,1,5,8,1,2,5,8,1,3,5,8,1}
             //u = {1,0,1,2,4,0,1,2,3,4,5,6,5,0,1,2}
             //h = {1,3,8,7,4,3,8,7,3,7,8,3,5,3,8,7}
             //d = {1,4,5,6,4,4,5,6,3,0,1,2,5,4,5,6}
             //b = {0,2,1,0,5,0,7,6,2,6,5,4,4,4,3,2}
-            //m = {0,3,8,7,5,1,8,5,2,7,8,3,4,5,8,1}
+            //m = {0,3,8,7,5,1,8,5,2,7,8,3,4,1,8,5}
             //f = {0,4,5,6,5,2,3,4,2,6,5,4,4,6,7,0}
             bool side = false;
             int whatside = 0;
@@ -124,10 +126,10 @@ namespace neat_af
                 case 'l':
                     arr = new int[] { 0, 0, 7, 6, 1, 0, 7, 6, 2, 0, 7, 6, 3, 0, 7, 6 };
                     side = true;
-                    whatside = 5;
+                    whatside = 5; 
                     break;
                 case 'v':
-                    arr = new int[] { 0, 5, 8, 2, 1, 5, 8, 2, 2, 5, 8, 2, 3, 5, 8, 2 };
+                    arr = new int[] { 0, 5, 8, 1, 1, 5, 8, 1, 2, 5, 8, 1, 3, 5, 8, 1 };
                     break;
                 case 'u':
                     arr = new int[] { 1, 0, 1, 2, 4, 0, 1, 2, 3, 4, 5, 6, 5, 0, 1, 2 };
@@ -148,12 +150,16 @@ namespace neat_af
                     whatside = 3;
                     break;
                 case 'm':
-                    arr = new int[] { 0, 3, 8, 7, 5, 1, 8, 5, 2, 7, 8, 3, 4, 5, 8, 1 };
+                    arr = new int[] { 0, 3, 8, 7, 5, 1, 8, 5, 2, 7, 8, 3, 4, 1, 8, 5 };
                     break;
                 case 'f':
                     arr = new int[] { 0, 4, 5, 6, 5, 2, 3, 4, 2, 6, 5, 4, 4, 6, 7, 0 };
                     side = true;
                     whatside = 1;
+                    break;
+                case 'p':
+                    cube.setstart();
+                    return cube;
                     break;
             }
             cube.cubeS = cube.Switch(cube.cubeS, arr, shift, side, whatside);
@@ -169,14 +175,14 @@ namespace neat_af
             char[][] solvedcube = new char[6][];
             string s;
             char c;
-            solvedcube[0] = new char[] { 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y' };
-            solvedcube[1] = new char[] { 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b' };
-            solvedcube[2] = new char[] { 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w' };
-            solvedcube[3] = new char[] { 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g' };
-            solvedcube[4] = new char[] { 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r' };
-            solvedcube[5] = new char[] { 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o' };
+            solvedcube[0] = new char[] { 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y' };
+            solvedcube[1] = new char[] { 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b' };
+            solvedcube[2] = new char[] { 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w' };
+            solvedcube[3] = new char[] { 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g' };
+            solvedcube[4] = new char[] { 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r' };
+            solvedcube[5] = new char[] { 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o' };
             state = new Cube(solvedcube);
-
+            
             Console.WriteLine(state);
             while (true)
             {
@@ -185,7 +191,7 @@ namespace neat_af
                 c = s[0];
                 state = state.Rotation(c, false, state);
 
-                Console.WriteLine(state);
+                Console.WriteLine(state );
             }
         }
     }
