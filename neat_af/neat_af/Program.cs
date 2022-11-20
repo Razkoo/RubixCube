@@ -8,8 +8,8 @@ namespace neat_af
 {
     class Cube
     {
-        public char [][] CubeS { get; set; }
-        public char [][] Scube { get; set; }
+        public char [][] CubeS { get; set; } //Cube State
+        public char [][] Scube { get; set; } //Solved Cube
 
         public Cube(char [][] solved)
         {
@@ -88,17 +88,17 @@ namespace neat_af
         }
         public override string ToString()
         {
-            string[] arr = new string[] { string.Join("", CubeS[0]), string.Join("", CubeS[1]), string.Join("", CubeS[2]), string.Join("", CubeS[3]), string.Join("", CubeS[4]), string.Join("", CubeS[5]) };
-            string arrhalfway = string.Join("", arr);
+            string[] arr = new string[] { string.Join(",", CubeS[0]), string.Join(",", CubeS[1]), string.Join(",", CubeS[2]), string.Join(",", CubeS[3]), string.Join(",", CubeS[4]), string.Join(",", CubeS[5]) };
+            string arrhalfway = string.Join(" ,", arr);
             char[] almostoutput = new char[108];
-            for (int i = 0; i < arrhalfway.Length; i++)
+           /* for (int i = 0; i < arrhalfway.Length; i++)
             {
                 almostoutput[2 * i] = arrhalfway[i];
                 almostoutput[2 * i + 1] = ',';
-            }
-            string output;
-            output = string.Join("" , almostoutput);
-            return output;
+            }*/
+         //   string output;
+            //output = string.Join("" , almostoutput);
+            return arrhalfway;
         }
     
 
@@ -191,7 +191,7 @@ namespace neat_af
                 s = Console.ReadLine();
                 c = s[0];
                 state = state.Rotation(c, false, state);
-                Console.WriteLine(state );
+                Console.WriteLine(state);
             }
         }
     }
