@@ -5,3 +5,10 @@ C:\Users\noamg\source\repos\neat_af\neat_af\obj\Debug\neat_af.csproj.AssemblyRef
 C:\Users\noamg\source\repos\neat_af\neat_af\obj\Debug\neat_af.csproj.CoreCompileInputs.cache
 C:\Users\noamg\source\repos\neat_af\neat_af\obj\Debug\neat_af.exe
 C:\Users\noamg\source\repos\neat_af\neat_af\obj\Debug\neat_af.pdb
+C:\Users\noamg\OneDrive\Desktop\GitHub\RubixCube\neat_af\neat_af\bin\Debug\neat_af.exe.config
+C:\Users\noamg\OneDrive\Desktop\GitHub\RubixCube\neat_af\neat_af\bin\Debug\neat_af.exe
+C:\Users\noamg\OneDrive\Desktop\GitHub\RubixCube\neat_af\neat_af\bin\Debug\neat_af.pdb
+C:\Users\noamg\OneDrive\Desktop\GitHub\RubixCube\neat_af\neat_af\obj\Debug\neat_af.csproj.AssemblyReference.cache
+C:\Users\noamg\OneDrive\Desktop\GitHub\RubixCube\neat_af\neat_af\obj\Debug\neat_af.csproj.CoreCompileInputs.cache
+C:\Users\noamg\OneDrive\Desktop\GitHub\RubixCube\neat_af\neat_af\obj\Debug\neat_af.exe
+C:\Users\noamg\OneDrive\Desktop\GitHub\RubixCube\neat_af\neat_af\obj\Debug\neat_af.pdb

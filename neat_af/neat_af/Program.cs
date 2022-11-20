@@ -8,7 +8,7 @@ namespace neat_af
 {
     class Cube
     {
-        public char [][] cubeS { get; set; }
+        public char [][] CubeS { get; set; }
         public char [][] Scube { get; set; }
 
         public Cube(char [][] solved)
@@ -16,9 +16,10 @@ namespace neat_af
             this.Scube = solved;
             setstart();
         }
-        private void setstart()
+        private char[][] setstart()
         {
-            this.cubeS = this.Scube;   
+            this.CubeS = this.Scube;
+            return CubeS;
         }
         private char[][] SideRot(char[][] set, int whatside, bool shift)
         {
@@ -87,7 +88,7 @@ namespace neat_af
         }
         public override string ToString()
         {
-            string[] arr = new string[] { string.Join("", cubeS[0]), string.Join("", cubeS[1]), string.Join("", cubeS[2]), string.Join("", cubeS[3]), string.Join("", cubeS[4]), string.Join("", cubeS[5]) };
+            string[] arr = new string[] { string.Join("", CubeS[0]), string.Join("", CubeS[1]), string.Join("", CubeS[2]), string.Join("", CubeS[3]), string.Join("", CubeS[4]), string.Join("", CubeS[5]) };
             string arrhalfway = string.Join("", arr);
             char[] almostoutput = new char[108];
             for (int i = 0; i < arrhalfway.Length; i++)
@@ -158,11 +159,11 @@ namespace neat_af
                     whatside = 1;
                     break;
                 case 'p':
-                    cube.setstart();
+                    cube.CubeS = cube.setstart();
                     return cube;
-                    break;
+                    
             }
-            cube.cubeS = cube.Switch(cube.cubeS, arr, shift, side, whatside);
+            cube.CubeS = cube.Switch(cube.CubeS, arr, shift, side, whatside);
 
             return cube;
         }
@@ -190,7 +191,6 @@ namespace neat_af
                 s = Console.ReadLine();
                 c = s[0];
                 state = state.Rotation(c, false, state);
-
                 Console.WriteLine(state );
             }
         }
