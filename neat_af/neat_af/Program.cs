@@ -23,43 +23,41 @@ namespace neat_af
         }
         private char[][] SideRot(char[][] set, int whatside, bool shift)
         {
+            char saveval;
             int[] arr = new int[] { 0, 2, 4, 6, 1, 3, 5, 7 };
             if (shift)
             {
                 for (int i = 0; i < 2; i++)
                 {
-                    char saveval = set[whatside][i * 4 + 0];
+                    saveval = set[whatside][i * 4 + 0];
                     set[whatside][arr[i * 4 + 0]] = set[whatside][arr[i * 4 + 1]];
                     set[whatside][arr[i * 4 + 1]] = set[whatside][arr[i * 4 + 2]];
                     set[whatside][arr[i * 4 + 2]] = set[whatside][arr[i * 4 + 3]];
                     set[whatside][arr[i * 4 + 3]] = saveval;
-
                 }
-
             }
             else
             {
                 for (int i = 0; i < 2; i++)
                 {
-                    char saveval = set[whatside][i * 4 + 3];
+                    saveval = set[whatside][i * 4 + 3];
                     set[whatside][arr[i * 4 + 3]] = set[whatside][arr[i * 4 + 2]];
                     set[whatside][arr[i * 4 + 2]] = set[whatside][arr[i * 4 + 1]];
                     set[whatside][arr[i * 4 + 1]] = set[whatside][arr[i * 4 + 0]];
                     set[whatside][arr[i * 4 + 0]] = saveval;
-
                 }
-
             }
 
             return set;
         }
         private char[][] Switch(char[][] set, int[] arr,bool shift, bool side, int whatside)
         {
+            char saveval;
             if (shift)
             {
                 for (int i = 1; i < 4; i++)
                 {
-                    char saveval = set[arr[12]][i + 12];
+                    saveval = set[arr[12]][i + 12];
                     set[arr[12]][arr[i + 12]] = set[arr[8]][arr[i + 8]];
                     set[arr[8]][arr[i + 8]] = set[arr[4]][arr[i + 4]];
                     set[arr[4]][arr[i + 4]] = set[arr[0]][arr[i + 0]];
@@ -71,7 +69,7 @@ namespace neat_af
             {
                 for (int i = 1; i < 4; i++)
                 {
-                    char saveval = set[arr[0]][arr[i + 0]];
+                    saveval = set[arr[0]][arr[i + 0]];
                     set[arr[0]][arr[i + 0]] = set[arr[4]][arr[i + 4]];
                     set[arr[4]][arr[i + 4]] = set[arr[8]][arr[i + 8]];
                     set[arr[8]][arr[i + 8]] = set[arr[12]][arr[i + 12]];
@@ -89,16 +87,7 @@ namespace neat_af
         public override string ToString()
         {
             string[] arr = new string[] { string.Join(",", CubeS[0]), string.Join(",", CubeS[1]), string.Join(",", CubeS[2]), string.Join(",", CubeS[3]), string.Join(",", CubeS[4]), string.Join(",", CubeS[5]) };
-            string arrhalfway = string.Join(" ,", arr);
-            char[] almostoutput = new char[108];
-           /* for (int i = 0; i < arrhalfway.Length; i++)
-            {
-                almostoutput[2 * i] = arrhalfway[i];
-                almostoutput[2 * i + 1] = ',';
-            }*/
-         //   string output;
-            //output = string.Join("" , almostoutput);
-            return arrhalfway;
+            return string.Join(" ,", arr);
         }
     
 
