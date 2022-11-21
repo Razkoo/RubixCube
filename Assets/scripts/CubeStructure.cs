@@ -1,29 +1,26 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using System.Threading;
 
-public class rubixscript : MonoBehaviour
+public class CubeStructure : MonoBehaviour
 {
-    // Start is called before the first frame update
-    bool flag = false;
     public GameObject gc, bc, wc, yc, rc, oc, gowc, goyc, bowc, boyc, gwrc, gyrc, bwrc, byrc, gwc, gyc, grc, goc, bwc, byc, brc, boc, wrc, woc, yrc, yoc;
-    private bool rm, lm, bm, um, dm, fm, vm, hm, mm, shiftm;
-    private string mv, rotation;
-
     Vector g = new Vector(0, 0, -1), b = new Vector(0, 0, 1), w = new Vector(0, -1, 0), y = new Vector(0, 1, 0), r = new Vector(-1, 0, 0), o = new Vector(1, 0, 0);
     Vector gow = new Vector(1, -1, -1), goy = new Vector(1, 1, -1), bow = new Vector(1, -1, 1), boy = new Vector(1, 1, 1), gwr = new Vector(-1, -1, -1);
     Vector gyr = new Vector(-1, 1, -1), bwr = new Vector(-1, -1, 1), byr = new Vector(-1, 1, 1);
     Vector gw = new Vector(0, -1, -1), gy = new Vector(0, 1, -1), gr = new Vector(-1, 0, -1), go = new Vector(1, 0, -1), bw = new Vector(0, -1, 1), by = new Vector(0, 1, 1);
     Vector br = new Vector(-1, 0, 1), bo = new Vector(1, 0, 1), wr = new Vector(-1, -1, 0), wo = new Vector(1, -1, 0), yr = new Vector(-1, 1, 0), yo = new Vector(1, 1, 0);
+
+    private bool rm, lm, bm, um, dm, fm, vm, hm, mm, shiftm, flag = false;
+    private string mv, rotation;
+
+
     class Vector
     {
-        
         public float X { get; set; }
         public float Y { get; set; }
         public float Z { get; set; }
 
+        // Constructor
         public Vector(float x, float y, float z)
         {
             this.X = x;
@@ -31,21 +28,9 @@ public class rubixscript : MonoBehaviour
             this.Z = z;
         }
 
-        public static bool PointOnAxis(Vector v, int axis, char plane)
+        // Multiply a vector by matrix
+        public static Vector[] VectorXMatrix(Vector[] vectors, int[] indexes, int[,] matrix)
         {
-            /* Return if a point is on certain axis
-             * Vector, axis value, x y or z
-             */
-           
-            if ((plane == 'x' && v.X == axis) || (plane == 'y' && v.Y == axis) || (plane == 'z' && v.Z == axis))
-                return true;
-            else
-                return false;
-        }
-
-        public static Vector[] MatrixVectorMul(Vector[] vectors, int[] indexes, int[,] matrix)
-        {
-            // Multiply vector by matrix
             float x, y, z;
 
             foreach (int i in indexes)
@@ -55,131 +40,44 @@ public class rubixscript : MonoBehaviour
                 vectors[i].X = x * matrix[0, 0] + y * matrix[0, 1] + z * matrix[0, 2];
                 vectors[i].Y = x * matrix[1, 0] + y * matrix[1, 1] + z * matrix[1, 2];
                 vectors[i].Z = x * matrix[2, 0] + y * matrix[2, 1] + z * matrix[2, 2];
-
             }
-
             return vectors;
         }
 
-        public static bool Check(Vector[] arr)
+        // True = point exist, False = point doesn't
+        public static bool PointExist(Vector v, int axis, char plane)
         {
-            // Debug function to check for duplication in vectors
-            // True - good, False - Bad
-
-            for (int i = 0; i < arr.Length; i++)
-            {
-                for (int j = i + 1; j < arr.Length; j++)
-                {
-                    if (arr[j].X == arr[i].X && arr[j].Y == arr[i].Y && arr[j].Z == arr[i].Z)
-                    {
-                        Console.WriteLine(arr[j] + ", " + arr[i] + ", " + i + ", " + j);
-                        return false;
-                    }
-                }
-            }
-
-            return true;
+            return (plane == 'x' && v.X == axis) || (plane == 'y' && v.Y == axis) || (plane == 'z' && v.Z == axis);
         }
 
+        // Print function
         public override string ToString()
         {
             return $"[{this.X},{this.Y},{this.Z}]";
         }
-
-
     }
+
     class Move
     {
-        private Vector[] Vectors { get; set; }
         private GameObject[] Objects { get; set; }
+        private Vector[] Vectors { get; set; }
         private string Rotation { get; set; }
-        private int NUM_OF_VECTORS { get; set; }
 
+        // Constructor
         public Move(Vector[] vectors, GameObject[] objs, string move)
         {
-            this.NUM_OF_VECTORS = 26;
-
             this.Vectors = vectors;
             this.Objects = objs;
             this.Rotation = move;
         }
-        private static void rotate90(Move newMove, string mv, int[] indexes)
-        {
-            int xd = 0, yd = 0, zd = 0;
-            int neg = 1;
-            if (mv == mv.ToUpper())
-                neg = -1;
-            mv = mv.ToLower();
-            if (mv == "r" || mv == "v" || mv == "l")
-                yd = 90 * neg;
-            else if (mv == "b" || mv == "m" || mv == "f")
-                zd = 90 * neg;
-            else
-                xd = 90 * neg;
-            Debug.Log(xd + " " + yd + " " + zd);
-            foreach (int i in indexes)
-                newMove.Objects[i].transform.Rotate(-yd, xd, zd,Space.World);
-            // bugreport        newMove.Objects[i].transform.Rotate(-y, x, z);
 
-        }
-
-
-        private static int[] Org(Move newMove)
-        {
-            // Return the indexes of vectors in the wanted rotation
-            int[] indexes;
-            bool flagx = false, flagy = false, flagz = false;
-            string overAllRotation = newMove.Rotation.ToLower();
-
-            int axis;
-            int iCount = 0;
-
-            if (overAllRotation == "v" || overAllRotation == "h" || overAllRotation == "m")
-                indexes = new int[8];
-            else
-                indexes = new int[9];
-
-            if (overAllRotation == "r" || overAllRotation == "b" || overAllRotation == "u")
-                axis = 1;
-            else if (overAllRotation == "v" || overAllRotation == "h" || overAllRotation == "m")
-                axis = 0;
-            else
-                axis = -1;
-
-            if (overAllRotation == "r" || overAllRotation == "l" || overAllRotation == "v")
-                flagx = true;
-            else if (overAllRotation == "b" || overAllRotation == "f" || overAllRotation == "m")
-                flagz = true;
-            else
-                flagy = true;
-
-            for (int i = 0; i < newMove.NUM_OF_VECTORS; i++)
-            {
-                // If point is on one of the wanted axis for rotation
-                if ((Vector.PointOnAxis(newMove.Vectors[i], axis, 'x') && flagx) || (Vector.PointOnAxis(newMove.Vectors[i], axis, 'y') && flagy)
-                    || Vector.PointOnAxis(newMove.Vectors[i], axis, 'z') && flagz)
-                {
-                    indexes[iCount] = i;
-                    iCount++;
-                }
-            }
-
-            return indexes;
-        }
-
+        // Rotate the cube
+        // LowerCase = ClockWise, UpperCase = Counter ClockWise
         public static Vector[] Spin(Move newMove)
         {
-            // Function spins the cube
-            // r - Clockwise
-            // R - CounterClockwise
-
-            int[] indexes;
-            Vector[] vectors = new Vector[newMove.NUM_OF_VECTORS];
             int[,] pMatrix = { { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 } };
+            int[] indexes = Org(newMove);
             string rot = newMove.Rotation;
-
-            indexes = Org(newMove);
-            vectors = newMove.Vectors;
 
             if (rot == "r" || rot == "l" || rot == "v") // X axis clockwise
             {
@@ -219,11 +117,68 @@ public class rubixscript : MonoBehaviour
                 pMatrix[0, 2] = -1;
             }
 
-            rotate90(newMove, rot, indexes);
-            return Vector.MatrixVectorMul(vectors, indexes, pMatrix);
+            Rotate90(newMove, rot, indexes);
+            return Vector.VectorXMatrix(newMove.Vectors, indexes, pMatrix);
+        }
+
+        // Find the indexes of the vectors in the wanted rotation session
+        private static int[] Org(Move newMove)
+        {
+            bool flagx = false, flagy = false, flagz = false;
+            string rot = newMove.Rotation.ToLower();
+            const int NUM_OF_VECTORS = 26;
+            int axis, index = 0;
+            int[] indexes;
+
+            // Check if rotation needs 8 or 9 vectors
+            if (rot == "v" || rot == "h" || rot == "m") indexes = new int[8];
+            else indexes = new int[9];
+
+            // Find the axis of the vectors we need to rotate
+            if (rot == "r" || rot == "b" || rot == "u") axis = 1;
+            else if (rot == "v" || rot == "h" || rot == "m") axis = 0;
+            else axis = -1;
+
+            // Check what axis the rotation is on
+            if (rot == "r" || rot == "l" || rot == "v") flagx = true;
+            else if (rot == "b" || rot == "f" || rot == "m") flagz = true;
+            else flagy = true;
+
+            for (int i = 0; i < NUM_OF_VECTORS; i++)
+            {
+                // Take to the array only points that are on the wanted axis
+                if ((Vector.PointExist(newMove.Vectors[i], axis, 'x') && flagx) || (Vector.PointExist(newMove.Vectors[i], axis, 'y') && flagy)
+                    || Vector.PointExist(newMove.Vectors[i], axis, 'z') && flagz)
+                {
+                    indexes[index++] = i;
+                }
+            }
+            return indexes;
+        }
+
+        // Unity function - rotate the cube 90 degrees
+        private static void Rotate90(Move newMove, string mv, int[] indexes)
+        {
+            int xd = 0, yd = 0, zd = 0;
+            int neg = 1;
+
+            // Shift or normal move
+            if (mv == mv.ToUpper()) neg = -1;
+            mv = mv.ToLower();
+
+            // Find direction
+            if (mv == "r" || mv == "v" || mv == "l") yd = 90 * neg;
+            else if (mv == "b" || mv == "m" || mv == "f") zd = 90 * neg;
+            else xd = 90 * neg;
+
+            // Rotate degrees
+            foreach (int i in indexes)
+                newMove.Objects[i].transform.Rotate(-yd, xd, zd, Space.World);
         }
     }
-    void fixPosition()
+
+    // Unity function - update vectors position
+    void FixPosition()
     {
         gc.transform.position = new Vector3(g.X, g.Y, g.Z);
         bc.transform.position = new Vector3(b.X, b.Y, b.Z);
@@ -252,16 +207,16 @@ public class rubixscript : MonoBehaviour
         yrc.transform.position = new Vector3(yr.X, yr.Y, yr.Z);
         yoc.transform.position = new Vector3(yo.X, yo.Y, yo.Z);
     }
-    string checkRotation()
+
+    // Unity function - check for rotation
+    string CheckRotation()
     {
-        // Check for rotation and return the move if there is
         rm = Input.GetKeyDown(KeyCode.R); lm = Input.GetKeyDown(KeyCode.L); bm = Input.GetKeyDown(KeyCode.B);
         fm = Input.GetKeyDown(KeyCode.F); um = Input.GetKeyDown(KeyCode.U); dm = Input.GetKeyDown(KeyCode.D);
         vm = Input.GetKeyDown(KeyCode.V); hm = Input.GetKeyDown(KeyCode.H); mm = Input.GetKeyDown(KeyCode.M);
         shiftm = Input.GetKeyDown(KeyCode.LeftShift);
-        if (shiftm)
-            flag = true;
-
+        
+        if (shiftm) flag = true;
         if (rm || lm || bm || fm || um || dm || vm || hm || mm)
         {
             if (rm) mv = "r";
@@ -280,30 +235,25 @@ public class rubixscript : MonoBehaviour
             }
             return mv;
         }
-
-        return null;    
+        return null;
     }
+
     void Start()
     {
-        fixPosition();
+        FixPosition();
     }
+
     void Update()
     {
         GameObject[] vectorsO = { gc, bc, wc, yc, rc, oc, gowc, goyc, bowc, boyc, gwrc, gyrc, bwrc, byrc, gwc, gyc, grc, goc, bwc, byc, brc, boc, wrc, woc, yrc, yoc };
         Vector[] vectors = { g, b, w, y, r, o, gow, goy, bow, boy, gwr, gyr, bwr, byr, gw, gy, gr, go, bw, by, br, bo, wr, wo, yr, yo };
-       
-        rotation = checkRotation();
+
+        rotation = CheckRotation();
         if (rotation != null)
         {
             Move move = new Move(vectors, vectorsO, rotation);
             vectors = Move.Spin(move);
-            fixPosition();
+            FixPosition();
         }
-            
-        
-        
     }
-
-    
-    
 }
