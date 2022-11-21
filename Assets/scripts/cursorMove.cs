@@ -4,13 +4,17 @@ using UnityEngine;
 
 public class cursorMove : MonoBehaviour
 {
-    
-    float rotationX = 0f;
+
+    public Vector2 turn;
     [Range(0.1f, 100f)] public float sensetivity;
-    
+
+    private void Start()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+    }
     void Update()
     {
-        rotationX += Input.GetAxis("Mouse X") * sensetivity;
-        transform.eulerAngles = new Vector3(rotationX, 0, 0);
+        turn.y += Input.GetAxis("Mouse Y");
+        transform.localRotation = Quaternion.Euler(-turn.y, 0, 0);
     }
 }
