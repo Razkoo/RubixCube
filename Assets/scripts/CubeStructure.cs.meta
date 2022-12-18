@@ -3,7 +3,33 @@ guid: 6f528d49b731c1f4f8cddcdab6b1298d
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - gc: {instanceID: 0}
+  - bc: {instanceID: 0}
+  - wc: {instanceID: 0}
+  - yc: {instanceID: 0}
+  - rc: {instanceID: 0}
+  - oc: {instanceID: 0}
+  - gowc: {instanceID: 0}
+  - goyc: {instanceID: 0}
+  - bowc: {instanceID: 0}
+  - boyc: {instanceID: 0}
+  - gwrc: {instanceID: 0}
+  - gyrc: {instanceID: 0}
+  - bwrc: {instanceID: 0}
+  - byrc: {instanceID: 0}
+  - gwc: {instanceID: 0}
+  - gyc: {instanceID: 0}
+  - grc: {instanceID: 0}
+  - goc: {instanceID: 0}
+  - bwc: {instanceID: 0}
+  - byc: {instanceID: 0}
+  - brc: {instanceID: 0}
+  - boc: {instanceID: 0}
+  - wrc: {instanceID: 0}
+  - woc: {instanceID: 0}
+  - yrc: {instanceID: 0}
+  - yoc: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

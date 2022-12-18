@@ -4,15 +4,7 @@ using UnityEngine;
 public class CubeStructure : MonoBehaviour
 {
     public GameObject gc, bc, wc, yc, rc, oc, gowc, goyc, bowc, boyc, gwrc, gyrc, bwrc, byrc, gwc, gyc, grc, goc, bwc, byc, brc, boc, wrc, woc, yrc, yoc;
-    Vector g = new Vector(0, 0, -1), b = new Vector(0, 0, 1), w = new Vector(0, -1, 0), y = new Vector(0, 1, 0), r = new Vector(-1, 0, 0), o = new Vector(1, 0, 0);
-    Vector gow = new Vector(1, -1, -1), goy = new Vector(1, 1, -1), bow = new Vector(1, -1, 1), boy = new Vector(1, 1, 1), gwr = new Vector(-1, -1, -1);
-    Vector gyr = new Vector(-1, 1, -1), bwr = new Vector(-1, -1, 1), byr = new Vector(-1, 1, 1);
-    Vector gw = new Vector(0, -1, -1), gy = new Vector(0, 1, -1), gr = new Vector(-1, 0, -1), go = new Vector(1, 0, -1), bw = new Vector(0, -1, 1), by = new Vector(0, 1, 1);
-    Vector br = new Vector(-1, 0, 1), bo = new Vector(1, 0, 1), wr = new Vector(-1, -1, 0), wo = new Vector(1, -1, 0), yr = new Vector(-1, 1, 0), yo = new Vector(1, 1, 0);
-
-    private bool rm, lm, bm, um, dm, fm, vm, hm, mm, shiftm, flag = false;
-    private string mv, rotation;
-
+    Manager manager;
 
     class Vector
     {
@@ -61,14 +53,14 @@ public class CubeStructure : MonoBehaviour
     {
         private GameObject[] Objects { get; set; }
         private Vector[] Vectors { get; set; }
-        private string Rotation { get; set; }
+        public char Rotation { get; set; }
 
         // Constructor
-        public Move(Vector[] vectors, GameObject[] objs, string move)
+        public Move(Vector[] vectors, GameObject[] objs)
         {
             this.Vectors = vectors;
             this.Objects = objs;
-            this.Rotation = move;
+            this.Rotation = ' ';
         }
 
         // Rotate the cube
@@ -77,40 +69,40 @@ public class CubeStructure : MonoBehaviour
         {
             int[,] pMatrix = { { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 } };
             int[] indexes = Org(newMove);
-            string rot = newMove.Rotation;
+            char rot = newMove.Rotation;
 
-            if (rot == "r" || rot == "l" || rot == "v") // X axis clockwise
+            if (rot == 'r' || rot == 'l' || rot == 'v') // X axis clockwise
             {
                 pMatrix[0, 0] = 1;
                 pMatrix[2, 1] = 1;
                 pMatrix[1, 2] = -1;
             }
-            else if (rot == "b" || rot == "f" || rot == "m") // Y axis clockwise
+            else if (rot == 'b' || rot == 'f' || rot == 'm') // Y axis clockwise
             {
                 pMatrix[1, 0] = 1;
                 pMatrix[0, 1] = -1;
                 pMatrix[2, 2] = 1;
             }
-            else if (rot == "u" || rot == "h" || rot == "d") // Z axis clockwise
+            else if (rot == 'u' || rot == 'h' || rot == 'd') // Z axis clockwise
             {
                 pMatrix[2, 0] = -1;
                 pMatrix[1, 1] = 1;
                 pMatrix[0, 2] = 1;
 
             }
-            else if (rot == "R" || rot == "L" || rot == "V") // X axis counter clockwise
+            else if (rot == 'R' || rot == 'L' || rot == 'V') // X axis counter clockwise
             {
                 pMatrix[0, 0] = 1;
                 pMatrix[2, 1] = -1;
                 pMatrix[1, 2] = 1;
             }
-            else if (rot == "B" || rot == "F" || rot == "M") // Y axis counter clockwise
+            else if (rot == 'B' || rot == 'F' || rot == 'M') // Y axis counter clockwise
             {
                 pMatrix[1, 0] = -1;
                 pMatrix[0, 1] = 1;
                 pMatrix[2, 2] = 1;
             }
-            else if (rot == "U" || rot == "H" || rot == "D") // Z axis counter clockwise
+            else if (rot == 'U' || rot == 'H' || rot == 'D') // Z axis counter clockwise
             {
                 pMatrix[2, 0] = 1;
                 pMatrix[1, 1] = 1;
@@ -125,26 +117,25 @@ public class CubeStructure : MonoBehaviour
         private static int[] Org(Move newMove)
         {
             bool flagx = false, flagy = false, flagz = false;
-            string rot = newMove.Rotation.ToLower();
-            const int NUM_OF_VECTORS = 26;
-            int axis, index = 0;
+            char rot = char.ToLower(newMove.Rotation);
+            int index = 0, axis = 0;
             int[] indexes;
 
             // Check if rotation needs 8 or 9 vectors
-            if (rot == "v" || rot == "h" || rot == "m") indexes = new int[8];
+            if (rot == 'v' || rot == 'h' || rot == 'm') indexes = new int[8];
             else indexes = new int[9];
 
             // Find the axis of the vectors we need to rotate
-            if (rot == "r" || rot == "b" || rot == "u") axis = 1;
-            else if (rot == "v" || rot == "h" || rot == "m") axis = 0;
+            if (rot == 'r' || rot == 'b' || rot == 'u') axis = 1;
+            else if (rot == 'v' || rot == 'h' || rot == 'm') axis = 0;
             else axis = -1;
 
             // Check what axis the rotation is on
-            if (rot == "r" || rot == "l" || rot == "v") flagx = true;
-            else if (rot == "b" || rot == "f" || rot == "m") flagz = true;
+            if (rot == 'r' || rot == 'l' || rot == 'v') flagx = true;
+            else if (rot == 'b' || rot =='f' || rot == 'm') flagz = true;
             else flagy = true;
 
-            for (int i = 0; i < NUM_OF_VECTORS; i++)
+            for (int i = 0; i < 26; i++)
             {
                 // Take to the array only points that are on the wanted axis
                 if ((Vector.PointExist(newMove.Vectors[i], axis, 'x') && flagx) || (Vector.PointExist(newMove.Vectors[i], axis, 'y') && flagy)
@@ -157,18 +148,17 @@ public class CubeStructure : MonoBehaviour
         }
 
         // Unity function - rotate the cube 90 degrees
-        private static void Rotate90(Move newMove, string mv, int[] indexes)
+        private static void Rotate90(Move newMove, char mv, int[] indexes)
         {
-            int xd = 0, yd = 0, zd = 0;
-            int neg = 1;
+            int xd = 00, yd = 0, zd = 0, neg = 1;
 
             // Shift or normal move
-            if (mv == mv.ToUpper()) neg = -1;
-            mv = mv.ToLower();
+            if (mv == char.ToUpper(mv)) neg = -1;
+            mv = char.ToLower(mv);
 
             // Find direction
-            if (mv == "r" || mv == "v" || mv == "l") yd = 90 * neg;
-            else if (mv == "b" || mv == "m" || mv == "f") zd = 90 * neg;
+            if (mv == 'r' || mv == 'v' || mv == 'l') yd = 90 * neg;
+            else if (mv == 'b' || mv == 'm' || mv == 'f') zd = 90 * neg;
             else xd = 90 * neg;
 
             // Rotate degrees
@@ -177,83 +167,116 @@ public class CubeStructure : MonoBehaviour
         }
     }
 
-    // Unity function - update vectors position
-    void FixPosition()
+    class Manager
     {
-        gc.transform.position = new Vector3(g.X, g.Y, g.Z);
-        bc.transform.position = new Vector3(b.X, b.Y, b.Z);
-        wc.transform.position = new Vector3(w.X, w.Y, w.Z);
-        yc.transform.position = new Vector3(y.X, y.Y, y.Z);
-        rc.transform.position = new Vector3(r.X, r.Y, r.Z);
-        oc.transform.position = new Vector3(o.X, o.Y, o.Z);
-        gowc.transform.position = new Vector3(gow.X, gow.Y, gow.Z);
-        goyc.transform.position = new Vector3(goy.X, goy.Y, goy.Z);
-        bowc.transform.position = new Vector3(bow.X, bow.Y, bow.Z);
-        boyc.transform.position = new Vector3(boy.X, boy.Y, boy.Z);
-        gwrc.transform.position = new Vector3(gwr.X, gwr.Y, gwr.Z);
-        gyrc.transform.position = new Vector3(gyr.X, gyr.Y, gyr.Z);
-        bwrc.transform.position = new Vector3(bwr.X, bwr.Y, bwr.Z);
-        byrc.transform.position = new Vector3(byr.X, byr.Y, byr.Z);
-        gwc.transform.position = new Vector3(gw.X, gw.Y, gw.Z);
-        gyc.transform.position = new Vector3(gy.X, gy.Y, gy.Z);
-        grc.transform.position = new Vector3(gr.X, gr.Y, gr.Z);
-        goc.transform.position = new Vector3(go.X, go.Y, go.Z);
-        bwc.transform.position = new Vector3(bw.X, bw.Y, bw.Z);
-        byc.transform.position = new Vector3(by.X, by.Y, by.Z);
-        brc.transform.position = new Vector3(br.X, br.Y, br.Z);
-        boc.transform.position = new Vector3(bo.X, bo.Y, bo.Z);
-        wrc.transform.position = new Vector3(wr.X, wr.Y, wr.Z);
-        woc.transform.position = new Vector3(wo.X, wo.Y, wo.Z);
-        yrc.transform.position = new Vector3(yr.X, yr.Y, yr.Z);
-        yoc.transform.position = new Vector3(yo.X, yo.Y, yo.Z);
-    }
+        private bool rm, lm, bm, um, dm, fm, vm, hm, mm, shiftm, flag = false;
+        private System.Random rnd = new System.Random();
+        private GameObject[] _VectorsO { get; set; }
+        private Vector[] _Vectors { get; set; }
+        private Move _Move { get; set; }
+        private char mv, rotation;
 
-    // Unity function - check for rotation
-    string CheckRotation()
-    {
-        rm = Input.GetKeyDown(KeyCode.R); lm = Input.GetKeyDown(KeyCode.L); bm = Input.GetKeyDown(KeyCode.B);
-        fm = Input.GetKeyDown(KeyCode.F); um = Input.GetKeyDown(KeyCode.U); dm = Input.GetKeyDown(KeyCode.D);
-        vm = Input.GetKeyDown(KeyCode.V); hm = Input.GetKeyDown(KeyCode.H); mm = Input.GetKeyDown(KeyCode.M);
-        shiftm = Input.GetKeyDown(KeyCode.LeftShift);
-        
-        if (shiftm) flag = true;
-        if (rm || lm || bm || fm || um || dm || vm || hm || mm)
+        private char[] MOVES = { 'r', 'l', 'b', 'v', 'm', 'f', 'u', 'h', 'd', 'R', 'L', 'B', 'V', 'M', 'F', 'U', 'H', 'D' };
+        private const int SCRAMBLE_AMOUNT = 0;
+        private const int ROTATIONS_AMOUNT = 16;
+
+        // Constructor
+        public Manager(GameObject[] objs, Vector[] vectors, Move move)
         {
-            if (rm) mv = "r";
-            else if (lm) mv = "l";
-            else if (bm) mv = "b";
-            else if (fm) mv = "f";
-            else if (um) mv = "u";
-            else if (dm) mv = "d";
-            else if (vm) mv = "v";
-            else if (hm) mv = "h";
-            else if (mm) mv = "m";
-            if (flag)
-            {
-                mv = mv.ToUpper();
-                flag = false;
-            }
-            return mv;
+            this._Vectors = vectors;
+            this._VectorsO = objs;
+            this._Move = move;
+            FixPosition(); 
         }
-        return null;
+
+        // Unity function - Manage program per frame
+        public void Manage()
+        {
+            CheckAction();
+            rotation = CheckRotation();
+
+            if (rotation != ' ')
+            {
+                _Move.Rotation = rotation;
+                _Vectors = Move.Spin(_Move);
+                FixPosition();
+            }
+        }
+
+        // Unity function - update vectors position
+        private void FixPosition()
+        {
+            for (int i = 0; i < 26; i++)
+                _VectorsO[i].transform.position = new Vector3(_Vectors[i].X, _Vectors[i].Y, _Vectors[i].Z);
+        }
+        
+        // Unity function - check for rotation
+        private char CheckRotation()
+        {
+            rm = Input.GetKeyDown(KeyCode.E); lm = Input.GetKeyDown(KeyCode.Q); bm = Input.GetKeyDown(KeyCode.D);
+            fm = Input.GetKeyDown(KeyCode.A); um = Input.GetKeyDown(KeyCode.C); dm = Input.GetKeyDown(KeyCode.Z);
+            vm = Input.GetKeyDown(KeyCode.W); hm = Input.GetKeyDown(KeyCode.X); mm = Input.GetKeyDown(KeyCode.S);
+            shiftm = Input.GetKeyDown(KeyCode.LeftShift);
+
+            if (shiftm) flag = true;
+            if (rm || lm || bm || fm || um || dm || vm || hm || mm)
+            {
+                if (rm) mv = 'r';
+                else if (lm) mv = 'l';
+                else if (bm) mv = 'b';
+                else if (fm) mv = 'f';
+                else if (um) mv = 'u';
+                else if (dm) mv = 'd';
+                else if (vm) mv = 'v';
+                else if (hm) mv = 'h';
+                else if (mm) mv = 'm';
+                if (flag)
+                {
+                    mv = char.ToUpper(mv);
+                    flag = false;
+                }
+                return mv;
+            }
+            return ' ';
+        }
+
+        // Unity function - actions possible: scramble or reset
+        private void CheckAction()
+        {
+            bool scramble = Input.GetKeyDown(KeyCode.M);
+            if (scramble) 
+            {
+                Debug.Log("pressed");
+                
+                for (int i = 0; i < SCRAMBLE_AMOUNT; i++)
+                {
+                    _Move.Rotation = MOVES[rnd.Next(0, ROTATIONS_AMOUNT )];
+                    Debug.Log(_Move.Rotation);
+                    _Vectors = Move.Spin(_Move);
+                }
+                scramble = false;
+
+            }
+            
+        }
     }
 
     void Start()
     {
-        FixPosition();
-    }
+        Vector g = new Vector(0, 0, -1), b = new Vector(0, 0, 1), w = new Vector(0, -1, 0), y = new Vector(0, 1, 0), r = new Vector(-1, 0, 0), o = new Vector(1, 0, 0);
+        Vector gow = new Vector(1, -1, -1), goy = new Vector(1, 1, -1), bow = new Vector(1, -1, 1), boy = new Vector(1, 1, 1), gwr = new Vector(-1, -1, -1);
+        Vector gyr = new Vector(-1, 1, -1), bwr = new Vector(-1, -1, 1), byr = new Vector(-1, 1, 1);
+        Vector gw = new Vector(0, -1, -1), gy = new Vector(0, 1, -1), gr = new Vector(-1, 0, -1), go = new Vector(1, 0, -1), bw = new Vector(0, -1, 1), by = new Vector(0, 1, 1);
+        Vector br = new Vector(-1, 0, 1), bo = new Vector(1, 0, 1), wr = new Vector(-1, -1, 0), wo = new Vector(1, -1, 0), yr = new Vector(-1, 1, 0), yo = new Vector(1, 1, 0);
 
-    void Update()
-    {
         GameObject[] vectorsO = { gc, bc, wc, yc, rc, oc, gowc, goyc, bowc, boyc, gwrc, gyrc, bwrc, byrc, gwc, gyc, grc, goc, bwc, byc, brc, boc, wrc, woc, yrc, yoc };
         Vector[] vectors = { g, b, w, y, r, o, gow, goy, bow, boy, gwr, gyr, bwr, byr, gw, gy, gr, go, bw, by, br, bo, wr, wo, yr, yo };
 
-        rotation = CheckRotation();
-        if (rotation != null)
-        {
-            Move move = new Move(vectors, vectorsO, rotation);
-            vectors = Move.Spin(move);
-            FixPosition();
-        }
+        manager = new Manager(vectorsO, vectors, new Move(vectors, vectorsO));
+    }
+
+    void FixedUpdate()
+    {
+        manager.Manage();
     }
 }
