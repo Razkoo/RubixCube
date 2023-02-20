@@ -176,7 +176,7 @@ public class CubeStructure : MonoBehaviour
         private Move _Move { get; set; }
         private char mv, rotation;
         private char[] MOVES = { 'r', 'l', 'b', 'v', 'm', 'f', 'u', 'h', 'd', 'R', 'L', 'B', 'V', 'M', 'F', 'U', 'H', 'D' }, rotations;
-        private const int SCRAMBLE_AMOUNT = 2;
+        private const int SCRAMBLE_AMOUNT = 1;
         private const int ROTATIONS_AMOUNT = 16;
 
         // Constructor
@@ -241,7 +241,10 @@ public class CubeStructure : MonoBehaviour
                 ROT(mv);
             }
             if (m)
-                Mix();
+                for (int i = 0; i < 100; i++)
+                {
+                    Mix();
+                }
         }
 
         // Unity function - actions possible: scramble or reset
@@ -252,7 +255,7 @@ public class CubeStructure : MonoBehaviour
             for (int i = 0; i < SCRAMBLE_AMOUNT; i++)
             {
                 MoveSet[i] = rnd.Next(0, ROTATIONS_AMOUNT);
-            }
+      }
             RunMix(MoveSet);
         }
         private void RunMix(int[] mix)
