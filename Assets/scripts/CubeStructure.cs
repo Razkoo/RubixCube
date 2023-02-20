@@ -132,7 +132,7 @@ public class CubeStructure : MonoBehaviour
 
             // Check what axis the rotation is on
             if (rot == 'r' || rot == 'l' || rot == 'v') flagx = true;
-            else if (rot == 'b' || rot == 'f' || rot == 'm') flagz = true;
+            else if (rot == 'b' || rot =='f' || rot == 'm') flagz = true;
             else flagy = true;
 
             for (int i = 0; i < 26; i++)
@@ -169,15 +169,15 @@ public class CubeStructure : MonoBehaviour
 
     class Manager
     {
+        private bool rm, lm, bm, um, dm, fm, vm, hm, mm, shiftm, m, flag = false;
         private System.Random rnd = new System.Random();
         private GameObject[] _VectorsO { get; set; }
         private Vector[] _Vectors { get; set; }
         private Move _Move { get; set; }
-
-        private char[] MOVES = { 'r', 'l', 'b', 'v', 'm', 'f', 'u', 'h', 'd', 'R', 'L', 'B', 'V', 'M', 'F', 'U', 'H', 'D' };
-        private const int SCRAMBLE_AMOUNT = 2;
+        private char mv, rotation;
+        private char[] MOVES = { 'r', 'l', 'b', 'v', 'm', 'f', 'u', 'h', 'd', 'R', 'L', 'B', 'V', 'M', 'F', 'U', 'H', 'D' }, rotations;
+        private const int SCRAMBLE_AMOUNT = 1;
         private const int ROTATIONS_AMOUNT = 16;
-        private char mv;
 
         // Constructor
         public Manager(GameObject[] objs, Vector[] vectors, Move move)
@@ -191,21 +191,11 @@ public class CubeStructure : MonoBehaviour
         // Unity function - Manage program per frame
         public void Manage()
         {
-            Rot(CheckRotation());
+            // CheckAction();
+            CheckRotation();
         }
-
-        // Unity function - Rotate the cube
-        private void Rot(char C)
+        private void ROT(char C)
         {
-            if (C == 'z') // Mix
-            {
-                Mix();
-            }
-            else if (C == 'x') // Reset 
-            {
-
-            }
-
             if (C != ' ')
             {
                 _Move.Rotation = C;
@@ -222,15 +212,13 @@ public class CubeStructure : MonoBehaviour
         }
 
         // Unity function - check for rotation
-        private char CheckRotation()
+        private void CheckRotation()
         {
-            bool rm = Input.GetKeyDown(KeyCode.E); bool lm = Input.GetKeyDown(KeyCode.Q); bool bm = Input.GetKeyDown(KeyCode.D);
-            bool fm = Input.GetKeyDown(KeyCode.A); bool um = Input.GetKeyDown(KeyCode.C); bool dm = Input.GetKeyDown(KeyCode.Z);
-            bool vm = Input.GetKeyDown(KeyCode.W); bool hm = Input.GetKeyDown(KeyCode.X); bool mm = Input.GetKeyDown(KeyCode.S);
-            bool m = Input.GetKeyDown(KeyCode.M); bool r = Input.GetKeyDown(KeyCode.R);
-
-            bool shiftm = Input.GetKeyDown(KeyCode.LeftShift);
-            bool flag = false;
+            rm = Input.GetKeyDown(KeyCode.E); lm = Input.GetKeyDown(KeyCode.Q); bm = Input.GetKeyDown(KeyCode.D);
+            fm = Input.GetKeyDown(KeyCode.A); um = Input.GetKeyDown(KeyCode.C); dm = Input.GetKeyDown(KeyCode.Z);
+            vm = Input.GetKeyDown(KeyCode.W); hm = Input.GetKeyDown(KeyCode.X); mm = Input.GetKeyDown(KeyCode.S);
+            m = Input.GetKeyDown(KeyCode.M);
+            shiftm = Input.GetKeyDown(KeyCode.LeftShift);
 
             if (shiftm) flag = true;
             if (rm || lm || bm || fm || um || dm || vm || hm || mm)
@@ -250,31 +238,44 @@ public class CubeStructure : MonoBehaviour
                     flag = false;
                 }
                 Debug.Log(mv);
+                ROT(mv);
             }
-            if (m) // Mix
-            {
-                return 'z';
-            }
-            else if (r) // Reset
-            {
-                return 'x';
-            }
-
-            return mv;
+            if (m)
+                for (int i = 0; i < 100; i++)
+                {
+                    Mix();
+                }
         }
 
         // Unity function - actions possible: scramble or reset
         private void Mix()
         {
+
+            int[] MoveSet = new int[SCRAMBLE_AMOUNT];
             for (int i = 0; i < SCRAMBLE_AMOUNT; i++)
             {
-                _Move.Rotation = MOVES[rnd.Next(0, ROTATIONS_AMOUNT)];
-                Move.Spin(_Move);
-
-            }
-            yield return new WaitForSeconds(0.02f);
-
+                MoveSet[i] = rnd.Next(0, ROTATIONS_AMOUNT);
+      }
+            RunMix(MoveSet);
         }
+        private void RunMix(int[] mix)
+        {
+            rotations = new char[SCRAMBLE_AMOUNT + 10];
+            foreach(int i in mix)
+            {
+                ROT( MOVES[i]);
+                Debug.Log(MOVES[i]);
+            }
+           /* foreach (char c in rotations)
+            {
+                ROT(c);
+                Debug.Log(c);
+                // Thread.Sleep(1000);
+            }*/
+           // ROT('R');
+           // ROT('U');
+        }
+
     }
 
     void Start()
