@@ -5,20 +5,21 @@ using System.Threading;
 public class CubeStructure : MonoBehaviour
 {
     public GameObject gc, bc, wc, yc, rc, oc, gowc, goyc, bowc, boyc, gwrc, gyrc, bwrc, byrc, gwc, gyc, grc, goc, bwc, byc, brc, boc, wrc, woc, yrc, yoc;
+    private const char EMPTY_ROTATION = ' ';
     Manager manager;
 
     class Vector
     {
-        public float X { get; set; }
-        public float Y { get; set; }
-        public float Z { get; set; }
+        public float _X;
+        public float _Y;
+        public float _Z;
 
         // Constructor
         public Vector(float x, float y, float z)
         {
-            this.X = x;
-            this.Y = y;
-            this.Z = z;
+            this._X = x;
+            this._Y = y;
+            this._Z = z;
         }
 
         // Multiply a vector by matrix
@@ -28,88 +29,78 @@ public class CubeStructure : MonoBehaviour
 
             foreach (int i in indexes)
             {
-                x = vectors[i].X; y = vectors[i].Y; z = vectors[i].Z;
+                x = vectors[i]._X; y = vectors[i]._Y; z = vectors[i]._Z;
 
-                vectors[i].X = x * matrix[0, 0] + y * matrix[0, 1] + z * matrix[0, 2];
-                vectors[i].Y = x * matrix[1, 0] + y * matrix[1, 1] + z * matrix[1, 2];
-                vectors[i].Z = x * matrix[2, 0] + y * matrix[2, 1] + z * matrix[2, 2];
+                vectors[i]._X = x * matrix[0, 0] + y * matrix[0, 1] + z * matrix[0, 2];
+                vectors[i]._Y = x * matrix[1, 0] + y * matrix[1, 1] + z * matrix[1, 2];
+                vectors[i]._Z = x * matrix[2, 0] + y * matrix[2, 1] + z * matrix[2, 2];
             }
             return vectors;
         }
 
-        // True = point exist, False = point doesn't
+        // Return if point exist
         public static bool PointExist(Vector v, int axis, char plane)
         {
-            return (plane == 'x' && v.X == axis) || (plane == 'y' && v.Y == axis) || (plane == 'z' && v.Z == axis);
-        }
-
-        // Print function
-        public override string ToString()
-        {
-            return $"[{this.X},{this.Y},{this.Z}]";
+            return (plane == 'x' && v._X == axis) || (plane == 'y' && v._Y == axis) || (plane == 'z' && v._Z == axis);
         }
     }
 
     class Move
     {
-        private GameObject[] Objects { get; set; }
+        private GameObject[] Objects { get; set; } // Unity
         private Vector[] Vectors { get; set; }
         public char Rotation { get; set; }
 
         // Constructor
         public Move(Vector[] vectors, GameObject[] objs)
         {
+            this.Rotation = EMPTY_ROTATION;
             this.Vectors = vectors;
             this.Objects = objs;
-            this.Rotation = ' ';
         }
 
         // Rotate the cube
-        // LowerCase = ClockWise, UpperCase = Counter ClockWise
         public static Vector[] Spin(Move newMove)
         {
             int[,] pMatrix = { { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 } };
             int[] indexes = Org(newMove);
             char rot = newMove.Rotation;
+            
+            switch (rot)
+            {
+                case 'r': case 'l': case 'v': // X axis clockwise
+                    pMatrix[0, 0] = 1;
+                    pMatrix[2, 1] = 1;
+                    pMatrix[1, 2] = -1;
+                    break;
+                case 'b': case 'f': case 'm': // Y axis clockwise
+                    pMatrix[1, 0] = 1;
+                    pMatrix[0, 1] = -1;
+                    pMatrix[2, 2] = 1;
+                    break;
+                case 'u': case 'h': case 'd': // Z axis clockwise
+                    pMatrix[2, 0] = -1;
+                    pMatrix[1, 1] = 1;
+                    pMatrix[0, 2] = 1;
+                    break;
+                case 'R': case 'L': case 'V': // X axis counter clockwise
+                    pMatrix[0, 0] = 1;
+                    pMatrix[2, 1] = -1;
+                    pMatrix[1, 2] = 1;
+                    break;
+                case 'B': case 'F': case 'M': // Y axis counter clockwise
+                    pMatrix[1, 0] = -1;
+                    pMatrix[0, 1] = 1;
+                    pMatrix[2, 2] = 1;
+                    break;
+                case 'U': case 'H': case 'D': // Z axis counter clockwise
+                    pMatrix[2, 0] = 1;
+                    pMatrix[1, 1] = 1;
+                    pMatrix[0, 2] = -1;
+                    break;
+            }
 
-            if (rot == 'r' || rot == 'l' || rot == 'v') // X axis clockwise
-            {
-                pMatrix[0, 0] = 1;
-                pMatrix[2, 1] = 1;
-                pMatrix[1, 2] = -1;
-            }
-            else if (rot == 'b' || rot == 'f' || rot == 'm') // Y axis clockwise
-            {
-                pMatrix[1, 0] = 1;
-                pMatrix[0, 1] = -1;
-                pMatrix[2, 2] = 1;
-            }
-            else if (rot == 'u' || rot == 'h' || rot == 'd') // Z axis clockwise
-            {
-                pMatrix[2, 0] = -1;
-                pMatrix[1, 1] = 1;
-                pMatrix[0, 2] = 1;
-
-            }
-            else if (rot == 'R' || rot == 'L' || rot == 'V') // X axis counter clockwise
-            {
-                pMatrix[0, 0] = 1;
-                pMatrix[2, 1] = -1;
-                pMatrix[1, 2] = 1;
-            }
-            else if (rot == 'B' || rot == 'F' || rot == 'M') // Y axis counter clockwise
-            {
-                pMatrix[1, 0] = -1;
-                pMatrix[0, 1] = 1;
-                pMatrix[2, 2] = 1;
-            }
-            else if (rot == 'U' || rot == 'H' || rot == 'D') // Z axis counter clockwise
-            {
-                pMatrix[2, 0] = 1;
-                pMatrix[1, 1] = 1;
-                pMatrix[0, 2] = -1;
-            }
-            Rotate90(newMove, rot, indexes);
+            Rotate90(newMove, rot, indexes); // Unity
             return Vector.VectorXMatrix(newMove.Vectors, indexes, pMatrix);
         }
 
@@ -122,8 +113,10 @@ public class CubeStructure : MonoBehaviour
             int[] indexes;
 
             // Check if rotation needs 8 or 9 vectors
-            if (rot == 'v' || rot == 'h' || rot == 'm') indexes = new int[8];
-            else indexes = new int[9];
+            if (rot == 'v' || rot == 'h' || rot == 'm')
+                indexes = new int[8];
+            else 
+                indexes = new int[9];
 
             // Find the axis of the vectors we need to rotate
             if (rot == 'r' || rot == 'b' || rot == 'u') axis = 1;
@@ -132,12 +125,12 @@ public class CubeStructure : MonoBehaviour
 
             // Check what axis the rotation is on
             if (rot == 'r' || rot == 'l' || rot == 'v') flagx = true;
-            else if (rot == 'b' || rot =='f' || rot == 'm') flagz = true;
+            else if (rot == 'b' || rot == 'f' || rot == 'm') flagz = true;
             else flagy = true;
 
             for (int i = 0; i < 26; i++)
             {
-                // Take to the array only points that are on the wanted axis
+                // Take to the array only points that are on the wanted rotation axis
                 if ((Vector.PointExist(newMove.Vectors[i], axis, 'x') && flagx) || (Vector.PointExist(newMove.Vectors[i], axis, 'y') && flagy)
                     || Vector.PointExist(newMove.Vectors[i], axis, 'z') && flagz)
                 {
@@ -150,7 +143,7 @@ public class CubeStructure : MonoBehaviour
         // Unity function - rotate the cube 90 degrees
         private static void Rotate90(Move newMove, char mv, int[] indexes)
         {
-            int xd = 00, yd = 0, zd = 0, neg = 1;
+            int xd = 0, yd = 0, zd = 0, neg = 1;
 
             // Shift or normal move
             if (mv == char.ToUpper(mv)) neg = -1;
@@ -169,15 +162,14 @@ public class CubeStructure : MonoBehaviour
 
     class Manager
     {
-        private bool rm, lm, bm, um, dm, fm, vm, hm, mm, shiftm, m, flag = false;
-        private System.Random rnd = new System.Random();
-        private GameObject[] _VectorsO { get; set; }
-        private Vector[] _Vectors { get; set; }
-        private Move _Move { get; set; }
-        private char mv, rotation;
-        private char[] MOVES = { 'r', 'l', 'b', 'v', 'm', 'f', 'u', 'h', 'd', 'R', 'L', 'B', 'V', 'M', 'F', 'U', 'H', 'D' }, rotations;
-        private const int SCRAMBLE_AMOUNT = 1;
+        private GameObject[] _VectorsO
+        private Vector[] _Vectors
+        private Move _Move
+
+        private char[] MOVES = { 'r', 'l', 'b', 'v', 'm', 'f', 'u', 'h', 'd', 'R', 'L', 'B', 'V', 'M', 'F', 'U', 'H', 'D' };
+        private System.Random RANDOM = new System.Random();
         private const int ROTATIONS_AMOUNT = 16;
+        private const int SCRAMBLE_AMOUNT = 1;
 
         // Constructor
         public Manager(GameObject[] objs, Vector[] vectors, Move move)
@@ -191,12 +183,13 @@ public class CubeStructure : MonoBehaviour
         // Unity function - Manage program per frame
         public void Manage()
         {
-            // CheckAction();
-            CheckRotation();
+            CheckAction();
         }
+
+        // Rotate
         private void ROT(char C)
         {
-            if (C != ' ')
+            if (C != EMPTY_ROTATION)
             {
                 _Move.Rotation = C;
                 _Vectors = Move.Spin(_Move);
@@ -204,23 +197,31 @@ public class CubeStructure : MonoBehaviour
             }
         }
 
+        // Scramble cube
+        private void Mix()
+        {
+            for (int i = 0; i < SCRAMBLE_AMOUNT; i++)
+            {
+                Debug.Log(MOVES[RANDOM.Next(0, ROTATIONS_AMOUNT)]);
+            }
+        }
+        
         // Unity function - update vectors position
         private void FixPosition()
         {
             for (int i = 0; i < 26; i++)
-                _VectorsO[i].transform.position = new Vector3(_Vectors[i].X, _Vectors[i].Y, _Vectors[i].Z);
+                _VectorsO[i].transform.position = new Vector3(_Vectors[i]._X, _Vectors[i]._Y, _Vectors[i]._Z);
         }
 
         // Unity function - check for rotation
-        private void CheckRotation()
+        private void CheckAction()
         {
-            rm = Input.GetKeyDown(KeyCode.E); lm = Input.GetKeyDown(KeyCode.Q); bm = Input.GetKeyDown(KeyCode.D);
-            fm = Input.GetKeyDown(KeyCode.A); um = Input.GetKeyDown(KeyCode.C); dm = Input.GetKeyDown(KeyCode.Z);
-            vm = Input.GetKeyDown(KeyCode.W); hm = Input.GetKeyDown(KeyCode.X); mm = Input.GetKeyDown(KeyCode.S);
-            m = Input.GetKeyDown(KeyCode.M);
-            shiftm = Input.GetKeyDown(KeyCode.LeftShift);
+            bool rm = Input.GetKeyDown(KeyCode.E); bool lm = Input.GetKeyDown(KeyCode.Q); bool bm = Input.GetKeyDown(KeyCode.D);
+            bool fm = Input.GetKeyDown(KeyCode.A); bool um = Input.GetKeyDown(KeyCode.C); bool dm = Input.GetKeyDown(KeyCode.Z);
+            bool vm = Input.GetKeyDown(KeyCode.W); bool hm = Input.GetKeyDown(KeyCode.X); bool mm = Input.GetKeyDown(KeyCode.S);
+            bool m = Input.GetKeyDown(KeyCode.M); bool shiftm = Input.GetKeyDown(KeyCode.LeftShift);
+            char mv = EMPTY_ROTATION;
 
-            if (shiftm) flag = true;
             if (rm || lm || bm || fm || um || dm || vm || hm || mm)
             {
                 if (rm) mv = 'r';
@@ -232,49 +233,14 @@ public class CubeStructure : MonoBehaviour
                 else if (vm) mv = 'v';
                 else if (hm) mv = 'h';
                 else if (mm) mv = 'm';
-                if (flag)
-                {
-                    mv = char.ToUpper(mv);
-                    flag = false;
-                }
-                Debug.Log(mv);
+                if (shiftm) mv = char.ToUpper(mv);
+
                 ROT(mv);
             }
-            if (m)
-                for (int i = 0; i < 100; i++)
-                {
-                    Mix();
-                }
-        }
 
-        // Unity function - actions possible: scramble or reset
-        private void Mix()
-        {
+            if (m) Mix();
+        }   
 
-            int[] MoveSet = new int[SCRAMBLE_AMOUNT];
-            for (int i = 0; i < SCRAMBLE_AMOUNT; i++)
-            {
-                MoveSet[i] = rnd.Next(0, ROTATIONS_AMOUNT);
-      }
-            RunMix(MoveSet);
-        }
-        private void RunMix(int[] mix)
-        {
-            rotations = new char[SCRAMBLE_AMOUNT + 10];
-            foreach(int i in mix)
-            {
-                ROT( MOVES[i]);
-                Debug.Log(MOVES[i]);
-            }
-           /* foreach (char c in rotations)
-            {
-                ROT(c);
-                Debug.Log(c);
-                // Thread.Sleep(1000);
-            }*/
-           // ROT('R');
-           // ROT('U');
-        }
 
     }
 
@@ -294,6 +260,5 @@ public class CubeStructure : MonoBehaviour
     void Update()
     {
         manager.Manage();
-        Thread.Sleep(1);
     }
 }
