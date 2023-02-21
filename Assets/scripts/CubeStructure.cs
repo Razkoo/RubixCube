@@ -162,9 +162,9 @@ public class CubeStructure : MonoBehaviour
 
     class Manager
     {
-        private GameObject[] _VectorsO
-        private Vector[] _Vectors
-        private Move _Move
+        private GameObject[] _VectorsO;
+        private Vector[] _Vectors;
+        private Move _Move;
 
         private char[] MOVES = { 'r', 'l', 'b', 'v', 'm', 'f', 'u', 'h', 'd', 'R', 'L', 'B', 'V', 'M', 'F', 'U', 'H', 'D' };
         private System.Random RANDOM = new System.Random();
