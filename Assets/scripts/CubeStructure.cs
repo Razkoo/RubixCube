@@ -162,12 +162,12 @@ public class CubeStructure : MonoBehaviour
 
     class Manager
     {
-        private GameObject[] _VectorsO;
+        private readonly GameObject[] _VectorsO;
+        private readonly Move _Move;
         private Vector[] _Vectors;
-        private Move _Move;
 
-        private char[] MOVES = { 'r', 'l', 'b', 'v', 'm', 'f', 'u', 'h', 'd', 'R', 'L', 'B', 'V', 'M', 'F', 'U', 'H', 'D' };
-        private System.Random RANDOM = new System.Random();
+        private readonly char[] MOVES = { 'r', 'l', 'b', 'v', 'm', 'f', 'u', 'h', 'd', 'R', 'L', 'B', 'V', 'M', 'F', 'U', 'H', 'D' };
+        private readonly System.Random RANDOM = new System.Random();
         private const int ROTATIONS_AMOUNT = 16;
         private const int SCRAMBLE_AMOUNT = 1;
 
@@ -201,11 +201,9 @@ public class CubeStructure : MonoBehaviour
         private void Mix()
         {
             for (int i = 0; i < SCRAMBLE_AMOUNT; i++)
-            {
                 ROT(MOVES[RANDOM.Next(0, ROTATIONS_AMOUNT)]);
-            }
         }
-        
+
         // Unity function - update vectors position
         private void FixPosition()
         {
@@ -239,8 +237,7 @@ public class CubeStructure : MonoBehaviour
             }
 
             if (m) Mix();
-        }   
-
+        }
 
     }
 
