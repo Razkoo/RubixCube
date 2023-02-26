@@ -202,7 +202,7 @@ public class CubeStructure : MonoBehaviour
         {
             for (int i = 0; i < SCRAMBLE_AMOUNT; i++)
             {
-                Debug.Log(MOVES[RANDOM.Next(0, ROTATIONS_AMOUNT)]);
+                ROT(MOVES[RANDOM.Next(0, ROTATIONS_AMOUNT)]);
             }
         }
         
