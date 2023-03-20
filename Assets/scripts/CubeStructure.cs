@@ -7,7 +7,6 @@ public class CubeStructure : MonoBehaviour
     public GameObject gc, bc, wc, yc, rc, oc, gowc, goyc, bowc, boyc, gwrc, gyrc, bwrc, byrc, gwc, gyc, grc, goc, bwc, byc, brc, boc, wrc, woc, yrc, yoc;
     private const char EMPTY_ROTATION = ' ';
     Manager manager;
-
     class Vector
     {
         public float _X;
@@ -109,7 +108,7 @@ public class CubeStructure : MonoBehaviour
         {
             bool flagx = false, flagy = false, flagz = false;
             char rot = char.ToLower(newMove.Rotation);
-            int index = 0, axis = 0;
+            int index = 0, axis;
             int[] indexes;
 
             // Check if rotation needs 8 or 9 vectors
@@ -169,7 +168,7 @@ public class CubeStructure : MonoBehaviour
         private readonly char[] MOVES = { 'r', 'l', 'b', 'v', 'm', 'f', 'u', 'h', 'd', 'R', 'L', 'B', 'V', 'M', 'F', 'U', 'H', 'D' };
         private readonly System.Random RANDOM = new System.Random();
         private const int ROTATIONS_AMOUNT = 16;
-        private const int SCRAMBLE_AMOUNT = 1;
+        private const int SCRAMBLE_AMOUNT = 2;
 
         // Constructor
         public Manager(GameObject[] objs, Vector[] vectors, Move move)
@@ -200,8 +199,9 @@ public class CubeStructure : MonoBehaviour
         // Scramble cube
         private void Mix()
         {
-            for (int i = 0; i < SCRAMBLE_AMOUNT; i++)
-                ROT(MOVES[RANDOM.Next(0, ROTATIONS_AMOUNT)]);
+
+            ROT(MOVES[RANDOM.Next(0, ROTATIONS_AMOUNT)]);
+            Debug.Log(MOVES[RANDOM.Next(0, ROTATIONS_AMOUNT)]);
         }
 
         // Unity function - update vectors position
@@ -210,7 +210,18 @@ public class CubeStructure : MonoBehaviour
             for (int i = 0; i < 26; i++)
                 _VectorsO[i].transform.position = new Vector3(_Vectors[i]._X, _Vectors[i]._Y, _Vectors[i]._Z);
         }
-
+        public void checkrnd()
+        {
+            bool m = Input.GetKeyDown(KeyCode.M);
+            if (m)
+            {
+                Debug.Log(1);
+                for (int i = 0; i < SCRAMBLE_AMOUNT; i++)
+                {
+                    Mix();
+                }
+            }
+        }
         // Unity function - check for rotation
         private void CheckAction()
         {
@@ -236,7 +247,7 @@ public class CubeStructure : MonoBehaviour
                 ROT(mv);
             }
 
-            if (m) Mix();
+          
         }
 
     }
@@ -257,5 +268,9 @@ public class CubeStructure : MonoBehaviour
     void Update()
     {
         manager.Manage();
+    }
+    private void FixedUpdate()
+    {
+        manager.checkrnd();   
     }
 }
